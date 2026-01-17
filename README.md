@@ -48,6 +48,17 @@ docker-compose up -d
 ```
 The robots will take it from here. 🤖
 
+## 🏠 Make your Synology Work Harder
+
+Setting this up on your Synology NAS is a breeze with **Container Manager**.
+
+1.  **Prepare**: Create a folder in `File Station` (e.g., `/docker/weather`) and upload the project files (including `.env`).
+2.  **Create Project**: Open **Container Manager** > **Project** > **Create**.
+3.  **Config**: Set a name, select your folder, and it will pick up the `docker-compose.yml`.
+4.  **Launch**: Follow the wizard, and once it's "Running", access it at `http://[NAS-IP]:3000`.
+
+*Pro Tip: Use the **Reverse Proxy** in Control Panel to give it a clean HTTPS domain!*
+
 ## 🛠️ Tech Stack of the Future
 - **Next.js** (The Foundation)
 - **Tailwind CSS** (The Style)
