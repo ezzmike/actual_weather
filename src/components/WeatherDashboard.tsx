@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import SearchBar from './SearchBar';
 import CurrentWeather from './CurrentWeather';
 import Forecast from './Forecast';
+import WeatherMap from './WeatherMap';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchWeather } from '@/app/actions';
 
@@ -13,6 +14,7 @@ export default function WeatherDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [bgGradient, setBgGradient] = useState('from-blue-600 to-blue-900');
+  const [unit, setUnit] = useState<'F' | 'C'>('F');
 
   useEffect(() => {
     // Initial load with a default city
@@ -57,15 +59,34 @@ export default function WeatherDashboard() {
   return (
     <div className={`min-h-screen w-full bg-gradient-to-br ${bgGradient} p-4 md:p-8 transition-colors duration-1000`}>
       <div className="max-w-6xl mx-auto space-y-8">
-        <header className="flex flex-col gap-6 items-center">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center"
-          >
-            <h1 className="text-white/40 text-sm font-bold tracking-[0.2em] uppercase mb-2">Supremely Robust</h1>
-            <h2 className="text-white text-5xl font-black italic">WEATHER.OS</h2>
-          </motion.div>
+        <header className="flex flex-col gap-6 items-center w-full">
+          <div className="w-full flex justify-between items-center max-w-2xl">
+            <div className="w-10 h-10" /> {/* Spacer */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center"
+            >
+              <h1 className="text-white text-5xl font-black italic tracking-tight">Just The Weather</h1>
+            </motion.div>
+            
+            <div className="bg-white/10 backdrop-blur-md p-1 rounded-xl border border-white/20 flex gap-1">
+              <button
+                onClick={() => setUnit('F')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${unit === 'F' ? 'bg-white text-blue-600 shadow-lg' : 'text-white/60 hover:text-white'}`}
+                title="Fahrenheit (American)"
+              >
+                °F <span className="opacity-50 font-normal">🇺🇸</span>
+              </button>
+              <button
+                onClick={() => setUnit('C')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${unit === 'C' ? 'bg-white text-blue-600 shadow-lg' : 'text-white/60 hover:text-white'}`}
+                title="Celsius (Everybody Else)"
+              >
+                °C <span className="opacity-50 font-normal">🌍</span>
+              </button>
+            </div>
+          </div>
           
           <SearchBar onSearch={handleSearch} onLocationClick={handleLocationClick} />
         </header>
@@ -106,15 +127,16 @@ export default function WeatherDashboard() {
                 exit={{ opacity: 0 }}
                 className="space-y-8"
               >
-                <CurrentWeather data={weatherData} />
-                <Forecast days={forecastData} />
+                <CurrentWeather data={weatherData} unit={unit} />
+                <WeatherMap lat={weatherData.lat} lon={weatherData.lon} />
+                <Forecast days={forecastData} unit={unit} />
               </motion.div>
             )}
           </AnimatePresence>
         </main>
         
         <footer className="text-center pt-12 pb-4">
-          <p className="text-white/20 text-xs">Powered by Hyper-Robust Data Streams &bull; © 2026</p>
+          <p className="text-white/20 text-xs">I swear I'm not tracking you.</p>
         </footer>
       </div>
     </div>

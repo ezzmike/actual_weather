@@ -7,18 +7,26 @@ import { motion } from 'framer-motion';
 interface CurrentWeatherProps {
   data: {
     city: string;
-    temp: number;
+    temp_f: number;
+    temp_c: number;
     condition: string;
-    high: number;
-    low: number;
+    high_f: number;
+    high_c: number;
+    low_f: number;
+    low_c: number;
     humidity: number;
     windSpeed: number;
     precipitation: number;
     icon: string;
   };
+  unit: 'F' | 'C';
 }
 
-export default function CurrentWeather({ data }: CurrentWeatherProps) {
+export default function CurrentWeather({ data, unit }: CurrentWeatherProps) {
+  const temp = unit === 'F' ? data.temp_f : data.temp_c;
+  const high = unit === 'F' ? data.high_f : data.high_c;
+  const low = unit === 'F' ? data.low_f : data.low_c;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -30,10 +38,10 @@ export default function CurrentWeather({ data }: CurrentWeatherProps) {
           <h1 className="text-4xl font-bold mb-2">{data.city}</h1>
           <p className="text-lg text-white/70 capitalize">{data.condition}</p>
           <div className="mt-6 flex items-baseline gap-2">
-            <span className="text-8xl font-black">{Math.round(data.temp)}°</span>
+            <span className="text-8xl font-black">{Math.round(temp)}°</span>
             <div className="flex flex-col text-lg text-white/80">
-              <span>H: {Math.round(data.high)}°</span>
-              <span>L: {Math.round(data.low)}°</span>
+              <span>H: {Math.round(high)}°</span>
+              <span>L: {Math.round(low)}°</span>
             </div>
           </div>
         </div>
@@ -65,7 +73,7 @@ export default function CurrentWeather({ data }: CurrentWeatherProps) {
         <WeatherDetail icon={<Wind className="w-5 h-5" />} label="Wind" value={`${data.windSpeed} mph`} />
         <WeatherDetail icon={<Droplets className="w-5 h-5" />} label="Humidity" value={`${data.humidity}%`} />
         <WeatherDetail icon={<CloudRain className="w-5 h-5" />} label="Precip" value={`${data.precipitation}%`} />
-        <WeatherDetail icon={<Thermometer className="w-5 h-5" />} label="Feels Like" value={`${Math.round(data.temp - 2)}°`} />
+        <WeatherDetail icon={<Thermometer className="w-5 h-5" />} label="Feels Like" value={`${Math.round(temp - 2)}°`} />
       </div>
     </motion.div>
   );
