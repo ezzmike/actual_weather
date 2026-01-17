@@ -36,18 +36,25 @@ export default function SearchBar({ onSearch, onLocationClick }: SearchBarProps)
       setIsLoading(true);
       try {
         // Photon API for OpenStreetMap data - free and fast autocomplete
-        const response = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&filter=countrycode:US`);
+        const response = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`);
         const data = await response.json();
         
-        const results = data.features.map((f: any) => {
-          const p = f.properties;
-          const name = p.name || '';
-          const street = p.street || '';
-          const city = p.city || p.town || '';
-          const state = p.state || '';
-          const label = [name !== street ? name : null, street, city, state].filter(Boolean).join(', ');
-          return { label, ...f };
-        });
+        if (!data || !data.features) {
+          setSuggestions([]);
+          return;
+        }
+
+        const results = data.features
+          .filter((f: any) => f.properties && f.properties.countrycode === 'US' || !f.properties.countrycode)
+          .map((f: any) => {
+            const p = f.properties;
+            const name = p.name || '';
+            const street = p.street || '';
+            const city = p.city || p.town || '';
+            const state = p.state || '';
+            const label = [name !== street ? name : null, street, city, state].filter(Boolean).join(', ');
+            return { label, ...f };
+          });
 
         setSuggestions(results);
         setShowSuggestions(true);
