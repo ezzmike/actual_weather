@@ -7,6 +7,14 @@ import Forecast from './Forecast';
 import WeatherMap from './WeatherMap';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchWeather } from '@/app/actions';
+import { Shuffle } from 'lucide-react';
+
+const RANDOM_CITIES = [
+  'Tokyo', 'Paris', 'New York', 'Sydney', 'Cairo', 
+  'Reykjavik', 'Rio de Janeiro', 'Moscow', 'Cape Town', 'Bangkok',
+  'Anchorage', 'Honolulu', 'Dubai', 'Mumbai', 'Mexico City',
+  'Oslo', 'Athens', 'Nairobi', 'Seoul', 'Lima'
+];
 
 export default function WeatherDashboard() {
   const [weatherData, setWeatherData] = useState<any>(null);
@@ -54,6 +62,11 @@ export default function WeatherDashboard() {
         }
       );
     }
+  };
+
+  const handleRandomWeather = () => {
+    const randomCity = RANDOM_CITIES[Math.floor(Math.random() * RANDOM_CITIES.length)];
+    handleSearch(randomCity);
   };
 
   return (
@@ -135,7 +148,16 @@ export default function WeatherDashboard() {
           </AnimatePresence>
         </main>
         
-        <footer className="text-center pt-12 pb-4">
+        <footer className="text-center pt-12 pb-4 space-y-6">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleRandomWeather}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full text-white font-medium transition-all shadow-xl"
+          >
+            <Shuffle className="w-4 h-4" />
+            Random Weather
+          </motion.button>
           <p className="text-white/20 text-xs">I swear I'm not tracking you.</p>
         </footer>
       </div>
