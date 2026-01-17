@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Wind, Droplets, Thermometer, Sun, CloudRain } from 'lucide-react';
+import { Wind, Droplets, Thermometer, Sun, CloudRain, Moon, CloudSun, CloudMoon, Cloud } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface CurrentWeatherProps {
@@ -18,6 +18,7 @@ interface CurrentWeatherProps {
     windSpeed: number;
     precipitation: number;
     icon: string;
+    isDay: boolean;
   };
   unit: 'F' | 'C';
 }
@@ -26,6 +27,27 @@ export default function CurrentWeather({ data, unit }: CurrentWeatherProps) {
   const temp = unit === 'F' ? data.temp_f : data.temp_c;
   const high = unit === 'F' ? data.high_f : data.high_c;
   const low = unit === 'F' ? data.low_f : data.low_c;
+
+  const getWeatherIcon = () => {
+    const condition = data.condition.toLowerCase();
+    const isDay = data.isDay;
+
+    if (condition.includes('rain') || condition.includes('drizzle') || condition.includes('shower')) {
+      return <CloudRain className="w-full h-full text-blue-400" />;
+    }
+    
+    if (condition.includes('cloud') || condition.includes('overcast')) {
+      if (isDay) return <CloudSun className="w-full h-full text-yellow-200" />;
+      return <CloudMoon className="w-full h-full text-slate-300" />;
+    }
+
+    if (condition.includes('clear') || condition.includes('sunny')) {
+      if (isDay) return <Sun className="w-full h-full text-yellow-400" />;
+      return <Moon className="w-full h-full text-slate-100" />;
+    }
+
+    return <Cloud className="w-full h-full text-white/80" />;
+  };
 
   return (
     <motion.div
@@ -47,11 +69,12 @@ export default function CurrentWeather({ data, unit }: CurrentWeatherProps) {
         </div>
 
         <div className="flex flex-col items-center md:items-end w-full md:w-auto">
-          {/* Main Weather Icon Placeholder - would be replaced by actual SVG/Animated icons */}
+          {/* Main Weather Icon */}
           <div className="w-32 h-32 md:w-48 md:h-48 relative mb-4">
             <motion.div
               animate={{ 
                 y: [0, -10, 0],
+                rotate: data.condition.toLowerCase().includes('sun') ? [0, 5, 0] : [0, 0, 0]
               }}
               transition={{ 
                 duration: 4, 
@@ -59,11 +82,7 @@ export default function CurrentWeather({ data, unit }: CurrentWeatherProps) {
                 ease: "easeInOut" 
               }}
             >
-              {data.condition.toLowerCase().includes('rain') ? (
-                <CloudRain className="w-full h-full text-blue-400" />
-              ) : (
-                <Sun className="w-full h-full text-yellow-400" />
-              )}
+              {getWeatherIcon()}
             </motion.div>
           </div>
         </div>

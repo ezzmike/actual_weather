@@ -16,6 +16,7 @@ export interface WeatherData {
   windSpeed: number;
   precipitation: number;
   icon: string;
+  isDay: boolean;
 }
 
 export interface ForecastDay {
@@ -49,7 +50,8 @@ export async function getWeatherData(query: string) {
         humidity: 45,
         windSpeed: 10,
         precipitation: 5,
-        icon: 'cloudy'
+        icon: 'cloudy',
+        isDay: true
       },
       forecast: Array.from({ length: 10 }).map((_, i) => ({
         day: new Date(Date.now() + i * 86400000).toLocaleDateString('en-US', { weekday: 'short' }),
@@ -85,7 +87,8 @@ export async function getWeatherData(query: string) {
         humidity: data.current.humidity,
         windSpeed: data.current.wind_mph,
         precipitation: data.current.precip_in,
-        icon: data.current.condition.text
+        icon: data.current.condition.text,
+        isDay: data.current.is_day === 1
       },
       forecast: data.forecast.forecastday.map((day: any) => ({
         day: new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' }),

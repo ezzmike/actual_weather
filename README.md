@@ -6,7 +6,7 @@ Welcome to **Just The Weather**, the supremely robust, hyper-realistic, and dang
 
 - **🎨 Eye-Candy UI**: Glassmorphism, smooth animations, and dynamic backgrounds that change *with* the sky. It’s like looking out a window, but better!
 - **🛰️ Live Satellite & Radar**: Real-time interactive maps centered on your location. Watch the storms roll in!
-- **🔭 Dynamic Autocomplete**: Start typing and we'll guess your address in the USA. Fast, smart, and precise.
+- **🔭 Dynamic Autocomplete**: Fast, smart suggestions that resolve ZIP codes to cities (e.g., search "90210" to see "Beverly Hills, CA").
 - **🌡️ Dual Mode**: Toggle between **Fahrenheit (American) 🇺🇸** and **Celsius (Everybody Else) 🌍** with one click.
 - **📍 Telepathic Geolocation**: One click and we find you. Not in a creepy way, just in a "here is your rain forecast" way.
 - **🔍 Search Anything**: City names? Got it. Zip codes? Easy. Your secret lair address? If it’s on the map, we’ll find the weather.

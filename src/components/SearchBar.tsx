@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, MapPin, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { searchLocations } from '@/app/actions';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -35,27 +36,7 @@ export default function SearchBar({ onSearch, onLocationClick }: SearchBarProps)
 
       setIsLoading(true);
       try {
-        // Photon API for OpenStreetMap data - free and fast autocomplete
-        const response = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`);
-        const data = await response.json();
-        
-        if (!data || !data.features) {
-          setSuggestions([]);
-          return;
-        }
-
-        const results = data.features
-          .filter((f: any) => f.properties && f.properties.countrycode === 'US' || !f.properties.countrycode)
-          .map((f: any) => {
-            const p = f.properties;
-            const name = p.name || '';
-            const street = p.street || '';
-            const city = p.city || p.town || '';
-            const state = p.state || '';
-            const label = [name !== street ? name : null, street, city, state].filter(Boolean).join(', ');
-            return { label, ...f };
-          });
-
+        const results = await searchLocations(query);
         setSuggestions(results);
         setShowSuggestions(true);
       } catch (error) {
@@ -78,8 +59,8 @@ export default function SearchBar({ onSearch, onLocationClick }: SearchBarProps)
   };
 
   const handleSuggestionClick = (suggestion: any) => {
-    setQuery(suggestion.label);
-    onSearch(suggestion.label);
+    setQuery(suggestion.name);
+    onSearch(suggestion.value);
     setShowSuggestions(false);
   };
 

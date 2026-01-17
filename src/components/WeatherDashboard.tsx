@@ -37,12 +37,22 @@ export default function WeatherDashboard() {
       setWeatherData(data.current);
       setForecastData(data.forecast);
       
-      // Dynamic background based on condition
+      // Dynamic background based on condition and time of day
       const condition = data.current.condition.toLowerCase();
-      if (condition.includes('rain')) setBgGradient('from-slate-700 to-slate-900');
-      else if (condition.includes('cloud')) setBgGradient('from-blue-400 to-indigo-800');
-      else if (condition.includes('sun') || condition.includes('clear')) setBgGradient('from-amber-400 to-blue-600');
-      else setBgGradient('from-blue-600 to-blue-900');
+      const isDay = data.current.isDay;
+
+      if (!isDay) {
+        // Night gradients
+        if (condition.includes('rain')) setBgGradient('from-slate-900 to-black');
+        else if (condition.includes('cloud')) setBgGradient('from-slate-800 to-indigo-950');
+        else setBgGradient('from-indigo-950 to-black');
+      } else {
+        // Day gradients
+        if (condition.includes('rain')) setBgGradient('from-slate-700 to-slate-900');
+        else if (condition.includes('cloud')) setBgGradient('from-blue-400 to-indigo-800');
+        else if (condition.includes('sun') || condition.includes('clear')) setBgGradient('from-amber-400 to-blue-600');
+        else setBgGradient('from-blue-600 to-blue-900');
+      }
 
     } catch (err) {
       setError('Could not find location. Please try again.');
